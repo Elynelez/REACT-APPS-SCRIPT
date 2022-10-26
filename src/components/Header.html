@@ -2,11 +2,13 @@
 
     function Header() {
       return (
-        <div>
+        <div className="big-order">
             <h2>Este es Casi un proyecto escolar</h2>
-            <Link to="/">Inicio</Link>
-            <br />
-            <Link to="/formularioRegistro">Formulario Registro</Link>
+            <div className="orden">
+              <NavLink exact activeClassName="correctLink" className="enlace" to="/">Inicio</NavLink>
+              <NavLink exact activeClassName="correctLink" className="enlace" to="/formularioRegistro">Formulario Registro</NavLink>
+              <NavLink exact activeClassName="correctLink" className="enlace" to="/Usuarios">Usuarios</NavLink>
+            </div>
         </div>
       );
     }

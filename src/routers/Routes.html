@@ -4,10 +4,12 @@
       return (
         <Router>
         <Header />
+        <br />
         <Redirect to="/" />
           <Switch>
             <Route exact path="/" component={Inicio}/>
             <Route exact path="/formularioRegistro" component={formularioRegistro}/>
+            <Route exact path="/usuarios" component={Usuarios}/>
           </Switch>
         </Router>
       );

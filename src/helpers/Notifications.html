@@ -1,0 +1,17 @@
+//<script type="text/jsx">
+    function notificacionGuardando (titulo){
+        Swal.fire({
+            title: titulo,
+            didOpen: () =>{
+                Swal.showLoading();
+            }
+        })
+    }
+    function notificacionTareaTerminada(titulo){
+        return Swal.fire({
+            title: titulo,
+            timeProgressBar: true,
+            confirmButtonText: "Cerrar"
+        })
+    }
+//</script>

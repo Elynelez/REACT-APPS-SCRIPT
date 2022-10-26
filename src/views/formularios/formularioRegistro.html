@@ -1,8 +1,35 @@
 //<script type="text/jsx">
     function formularioRegistro(){
+        let [form] = Form.useForm()
+        function guardarFormulario (datosFormulario){
+            
+            notificacionGuardando("guardando usuario")
+            let id = v4();
+
+            google.script.run.withSuccessHandler(titulo =>{
+                notificacionTareaTerminada("registro completo")
+                form.resetFields()
+            })
+            .guardarUsuario({id, ...datosFormulario})
+        }
+
         return (
-            <div>
-                Hola lokas
+            <div className="form-organize" >
+                <h1>REGÍSTRATE</h1>
+                <Form form={form} onFinish={guardarFormulario} layout="vertical">
+                    <Item name="nombreCompleto" label="Nombre Completo:" rules={[{required: true, message: "sin vacíos niña"}]}>
+                        <Input />
+                    </Item>
+                    <Item name="correoElectronico" label="Correo Electrónico:" rules={[{type: "email", message: "necesitas el @, y el .com"},{required: true, message: "sin vacíos niña"}]}>
+                        <Input />
+                    </Item>
+                    <Item name="contraseña" label="Contraseña:" rules={[{required: true, message: "sin vacíos niña"}]}>
+                        <Password />
+                    </Item>
+                    <Item>
+                        <Button htmlType="submit" >Guardar</Button>
+                    </Item>
+                </Form>
             </div>
         )
     }
