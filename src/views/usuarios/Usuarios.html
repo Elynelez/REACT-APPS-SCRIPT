@@ -1,19 +1,64 @@
 //<script type="text/jsx">
     function Usuarios(){
-        useEffect(listarUsuarios, []);
+        let [dataSource, setDataSource] = useState([])
+        let [renderTabla, setRenderTabla] = useState(0)
+        useEffect(listarUsuarios, [renderTabla]);
+        let History = useHistory()
         
         function listarUsuarios(){
             google.script.run
             .withSuccessHandler(res =>{
-                console.log(res)
+                let usuarios = JSON.parse(res)
+                let array = []
+                usuarios.map( usuario => {
+                    array.push({
+                        key: usuario.id,
+                        nombreCompleto: usuario.nombreCompleto,
+                        correo: usuario.correoElectronico,
+                        contrasenia: usuario.contraseña,
+                        acciones: <Fragment>
+                            <Button onClick={()=>{ History.push("/formularioRegistro/"+usuario.id) }}> Editar </Button>
+                            <Button type="danger" onClick={()=>{    eliminarUsuario(usuario.id) }}> Eliminar </Button>
+                        </Fragment>
+                    })
+                })
+            setDataSource(array)
             }).listarUsuarios()
         }
+        
+        function eliminarUsuario(id){
+        notificacionGuardando("eliminando usuario")
+        google.script.run
+        .withSuccessHandler( res => {
+        notificacionTareaTerminada("se eliminó correctamente")
+        setRenderTabla(renderTabla+1)
+        }).eliminarUsuarios(id)
+        }
 
+        const columns = [
+        {
+            title: 'Nombre completo',
+            dataIndex: 'nombreCompleto',
+            key: 'nombreCompleto',
+        },
+        {
+            title: 'Correo',
+            dataIndex: 'correo',
+            key: 'correo',
+        },
+        {
+            title: 'Contraseña',
+            dataIndex: 'contrasenia',
+            key: 'contrasenia',
+        },
+        {
+            title: 'Acciones',
+            dataIndex: 'acciones',
+            key: 'acciones',
+        },];
 
         return (
-            <div>
-                Usuarios
-            </div>
+            <Table dataSource={dataSource} columns={columns} />
         )
     }
         

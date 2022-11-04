@@ -1,22 +1,46 @@
 //<script type="text/jsx">
     function formularioRegistro(){
         let [form] = Form.useForm()
+        let {id} = useParams()
+        let [initialValues, setInitialValues] = useState(undefined)
+
+        useEffect(()=>{
+            if(id){
+                google.script.run
+                .withSuccessHandler(res =>{
+                var usuario = JSON.parse(res)
+                console.log(usuario)
+                setInitialValues(usuario)
+                }).listarUsuarios(id) 
+            }
+        }, [])
         function guardarFormulario (datosFormulario){
             
             notificacionGuardando("guardando usuario")
-            let id = v4();
+            
 
-            google.script.run.withSuccessHandler(titulo =>{
-                notificacionTareaTerminada("registro completo")
-                form.resetFields()
-            })
-            .guardarUsuario({id, ...datosFormulario})
+            if(id){
+                google.script.run.withSuccessHandler(titulo =>{
+                    notificacionTareaTerminada("actualizacion completa")
+                    setInitialValues(undefined)
+                    form.resetFields()
+                })
+                .actualizarUsuario(id, JSON.stringify(datosFormulario))
+            }
+            else{
+                let id = v4();
+
+                google.script.run.withSuccessHandler(titulo =>{
+                    notificacionTareaTerminada("registro completo")
+                    form.resetFields()
+                })
+                .guardarUsuario({id, ...datosFormulario})
+            }
         }
 
-        return (
-            <div className="form-organize" >
-                <h1>REGÍSTRATE</h1>
-                <Form form={form} onFinish={guardarFormulario} layout="vertical">
+        const Formulario = () => {
+            return (
+                <Form initialValues={initialValues} form={form} onFinish={guardarFormulario} layout="vertical">
                     <Item name="nombreCompleto" label="Nombre Completo:" rules={[{required: true, message: "sin vacíos niña"}]}>
                         <Input />
                     </Item>
@@ -30,6 +54,14 @@
                         <Button htmlType="submit" >Guardar</Button>
                     </Item>
                 </Form>
+            )
+        }
+
+
+        return (
+            <div className="form-organize" >
+                <h1>REGÍSTRATE</h1>
+                { (id && initialValues) ? <Formulario /> : <Formulario />}
             </div>
         )
     }
